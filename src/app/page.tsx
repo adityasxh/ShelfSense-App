@@ -45,14 +45,14 @@ export default function Home() {
   return (
     <main className="landing-page">
       <header className="landing-nav">
-        <a className="landing-brand" href="#" aria-label="ShelfSense home">
+        <a className="landing-brand" href="/" aria-label="ShelfSense home">
           <img className="brand-icon" src="/shelfsense-icon.svg" alt="" width="38" height="38" decoding="async" />
           <span>ShelfSense</span>
         </a>
         <nav className="landing-nav-links" aria-label="Main navigation">
           <a href="#how-it-works">How it works</a>
           <a href="#features">Features</a>
-          <button className="nav-cta" onClick={openShelfSense} disabled={opening}>{opening ? "Checking session…" : "Sign in"} <span aria-hidden="true">↗</span></button>
+          <button className="nav-cta" onClick={openShelfSense} disabled={opening}>{opening ? "Checking session…" : "Sign in"}</button>
         </nav>
       </header>
 
@@ -63,7 +63,7 @@ export default function Home() {
           <p className="landing-lede">ShelfSense helps grocery shops spot products at risk of expiry, explore practical stock-rescue options, and make clearer decisions before good stock goes to waste.</p>
           <div className="landing-actions">
             <button className="landing-button-primary" onClick={openShelfSense}>Explore ShelfSense <span aria-hidden="true">→</span></button>
-            <a className="landing-button-secondary" href="#how-it-works">See how it works <span aria-hidden="true">↓</span></a>
+            <a className="landing-button-secondary" href="/demo">Try demo with sample data</a><a className="landing-button-secondary" href="#how-it-works">See how it works</a>
           </div>
           <div className="landing-proof">
             <div className="landing-proof-icons" aria-hidden="true"><svg className="lucide-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M7 17 17 7"/><path d="M7 7h10v10"/></svg><svg className="lucide-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg><svg className="lucide-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M4 8V5a1 1 0 0 1 1-1h3M16 4h3a1 1 0 0 1 1 1v3M20 16v3a1 1 0 0 1-1 1h-3M8 20H5a1 1 0 0 1-1-1v-3"/><circle cx="12" cy="12" r="3"/></svg></div>
@@ -97,7 +97,7 @@ export default function Home() {
       <section className="landing-benefits" aria-label="ShelfSense benefits">
         <article className="benefit-card"><span className="benefit-icon"><svg className="lucide-icon" width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M4 8V5a1 1 0 0 1 1-1h3M16 4h3a1 1 0 0 1 1 1v3M20 16v3a1 1 0 0 1-1 1h-3M8 20H5a1 1 0 0 1-1-1v-3"/><circle cx="12" cy="12" r="3"/></svg></span><span className="benefit-index">01 / VISIBILITY</span><h3>Spot at-risk products</h3><p>See which items may be left unsold before expiry.</p><span className="benefit-link">Review priority stock <svg className="lucide-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M7 17 17 7"/><path d="M7 7h10v10"/></svg></span></article>
         <article className="benefit-card"><span className="benefit-icon"><svg className="lucide-icon" width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M3 3v18h18"/><path d="M8 15v-4"/><path d="M13 15V6"/><path d="M18 15V9"/></svg></span><span className="benefit-index">02 / SCENARIOS</span><h3>Compare your options</h3><p>Explore price and demand scenarios with clear assumptions.</p><span className="benefit-link">Compare outcomes <svg className="lucide-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M7 17 17 7"/><path d="M7 7h10v10"/></svg></span></article>
-        <article className="benefit-card"><span className="benefit-icon"><svg className="lucide-icon" width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11Z"/><path d="m9 12 2 2 4-4"/></svg></span><span className="benefit-index">03 / DECISION SUPPORT</span><h3>Choose with context</h3><p>Use evidence-led guidance to support everyday decisions.</p><span className="benefit-link">Understand the trade-offs <svg className="lucide-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M7 17 17 7"/><path d="M7 7h10v10"/></svg></span></article>
+        <article className="benefit-card"><span className="benefit-icon"><svg className="lucide-icon" width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11Z"/><path d="m9 12 2 2 4-4"/></svg></span><span className="benefit-index">03 / DECISION SUPPORT</span><h3>Choose with context</h3><p>Calculate expiry risk and estimated leftovers from stock, expiry dates, and daily sales.</p><span className="benefit-link">Understand the trade-offs <svg className="lucide-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M7 17 17 7"/><path d="M7 7h10v10"/></svg></span></article>
       </section>
 
       <section className="landing-features" id="features">
@@ -121,7 +121,7 @@ export default function Home() {
 
       <section className="landing-closing-cta"><div className="cta-decoration cta-one" /><div className="cta-decoration cta-two" /><span className="cta-kicker">MAKE THE NEXT STOCK DECISION COUNT</span><h2>Less waste starts with<br /><em>better visibility.</em></h2><p>Sign in to access your private inventory dashboard and stock-rescue tools.</p><button className="landing-button-light" onClick={openShelfSense}>Explore ShelfSense <span aria-hidden="true">→</span></button><span className="cta-footnote">Sign in or register to continue.</span></section>
 
-      <footer className="landing-footer"><a className="landing-brand" href="#"><img className="brand-icon" src="/shelfsense-icon.svg" alt="" /><span>ShelfSense</span></a><p>Rescue Stock Before It Becomes Waste.</p><div><a href="#features">Features</a><a href="#how-it-works">How it works</a><button onClick={openShelfSense}>Sign in ↗</button></div><small>Prototype · Estimates are illustrative, not guaranteed results. Follow applicable food-safety rules; expired products must not be resold.</small></footer>
+      <footer className="landing-footer"><a className="landing-brand" href="/"><img className="brand-icon" src="/shelfsense-icon.svg" alt="" /><span>ShelfSense</span></a><p>Rescue Stock Before It Becomes Waste.</p><div><a href="#features">Features</a><a href="#how-it-works">How it works</a><a href="/privacy">Privacy Policy</a><a href="/terms">Terms</a><a href="mailto:contact@shelfsense.app">Contact</a><button onClick={openShelfSense}>Sign in</button></div><small>Prototype · Estimates are illustrative, not guaranteed results. Follow applicable food-safety rules; expired products must not be resold. Contact: contact@shelfsense.app</small></footer>
     </main>
   );
 }
