@@ -283,3 +283,69 @@ button,a { -webkit-tap-highlight-color:transparent; }
 @media(prefers-reduced-motion:reduce) {
  .landing-page .landing-nav-links>a::after { transition:none; }
 }
+
+
+/* ShelfSense glass design system — translucent surfaces with restrained blur */
+:root {
+  --glass-line:rgba(255,255,255,.68);
+  --glass-surface:rgba(255,255,255,.64);
+  --glass-shadow:0 12px 34px rgba(27,67,43,.07),0 2px 7px rgba(27,67,43,.035);
+}
+.landing-page {
+  background:radial-gradient(ellipse at 8% 12%,rgba(207,229,190,.28),transparent 28%),radial-gradient(ellipse at 88% 43%,rgba(213,231,210,.23),transparent 32%),#f8f9f4;
+}
+.landing-page .landing-nav {
+  background:rgba(249,251,247,.72);
+  border-bottom:1px solid rgba(255,255,255,.86);
+  box-shadow:0 8px 28px rgba(30,66,43,.045);
+  backdrop-filter:blur(24px) saturate(165%);
+  -webkit-backdrop-filter:blur(24px) saturate(165%);
+}
+.landing-page .landing-nav::after { content:"";position:absolute;left:0;right:0;bottom:-1px;height:1px;background:linear-gradient(90deg,transparent,rgba(156,190,141,.5),transparent);pointer-events:none; }
+.landing-page .nav-cta { box-shadow:inset 0 1px 0 rgba(255,255,255,.18),0 7px 18px rgba(31,87,63,.16); }
+.landing-page .landing-visual .dashboard-preview {
+  background:linear-gradient(135deg,rgba(255,255,255,.9),rgba(255,255,255,.7));
+  border:1px solid rgba(255,255,255,.88);
+  box-shadow:0 26px 80px rgba(30,65,43,.105),inset 0 1px 0 rgba(255,255,255,.95);
+  backdrop-filter:blur(20px) saturate(135%);-webkit-backdrop-filter:blur(20px) saturate(135%);
+}
+.landing-page .floating-note {
+  background:rgba(255,255,255,.76);border:1px solid rgba(255,255,255,.94);
+  box-shadow:0 16px 42px rgba(31,65,43,.1),inset 0 1px 0 rgba(255,255,255,.95);
+  backdrop-filter:blur(22px) saturate(155%);-webkit-backdrop-filter:blur(22px) saturate(155%);
+}
+.landing-page .benefit-card,.landing-page .landing-feature-card,.landing-page .landing-step.step-card {
+  background:linear-gradient(145deg,rgba(255,255,255,.77),rgba(249,252,247,.55));
+  border-color:rgba(255,255,255,.9);box-shadow:0 8px 26px rgba(28,67,43,.045),inset 0 1px 0 rgba(255,255,255,.94);
+  backdrop-filter:blur(16px) saturate(135%);-webkit-backdrop-filter:blur(16px) saturate(135%);
+}
+.landing-page .benefit-card:hover,.landing-page .landing-feature-card:hover,.landing-page .landing-step.step-card:hover {
+  background:linear-gradient(145deg,rgba(255,255,255,.94),rgba(247,251,244,.82));
+  border-color:rgba(176,205,169,.82);box-shadow:0 18px 42px rgba(27,76,47,.095),inset 0 1px 0 #fff;
+}
+.landing-page .landing-footer,.landing-page .landing-footer>small { border-top-color:rgba(210,222,207,.75); }
+/* Extend the glass treatment to authentication and the signed-in workspace */
+.app,.auth-page {
+  background:radial-gradient(ellipse at 92% 0%,rgba(205,230,192,.22),transparent 29%),radial-gradient(ellipse at 0% 40%,rgba(220,235,215,.17),transparent 32%),var(--paper,#f8f9f4);
+}
+.app header,.app .app-header,.app .topbar,.app .dashboard-header,.auth-nav {
+  background:rgba(250,252,248,.76);border-bottom:1px solid rgba(255,255,255,.88);
+  box-shadow:0 7px 25px rgba(31,67,43,.045);backdrop-filter:blur(22px) saturate(155%);-webkit-backdrop-filter:blur(22px) saturate(155%);
+}
+.app .card,.app .panel,.app .stat-card,.app .metric-card,.app .product-card,.app .inventory-card,.app .content-card,.app .priority-card,.app .recommendation-card,.app .insight-card,.auth-card,.workspace-loading-panel,.workspace-skeleton-card {
+  background:linear-gradient(145deg,rgba(255,255,255,.82),rgba(255,255,255,.63));border:1px solid rgba(255,255,255,.9);
+  box-shadow:var(--glass-shadow),inset 0 1px 0 rgba(255,255,255,.9);backdrop-filter:blur(16px) saturate(135%);-webkit-backdrop-filter:blur(16px) saturate(135%);
+}
+.auth-card { border-color:rgba(255,255,255,.94);box-shadow:0 24px 70px rgba(25,58,40,.09),inset 0 1px 0 #fff; }
+.app input,.app select,.app textarea,.auth-card input,.auth-card select { background:rgba(255,255,255,.78);border-color:rgba(207,219,204,.9);box-shadow:inset 0 1px 2px rgba(25,58,40,.025); }
+.app input:focus,.app select:focus,.app textarea:focus,.auth-card input:focus,.auth-card select:focus { outline:0;border-color:#8db58a;box-shadow:0 0 0 3px rgba(111,164,103,.15); }
+.app button,.auth-card button { transition:transform .2s ease,box-shadow .22s ease,background-color .2s ease,border-color .2s ease; }
+.app button:not(:disabled):hover,.auth-card button:not(:disabled):hover { box-shadow:0 6px 18px rgba(29,75,46,.09); }
+.workspace-loading { background:radial-gradient(ellipse at 85% 5%,rgba(208,232,197,.38),transparent 32%),rgba(248,250,246,.92); }
+.workspace-skeleton-card,.workspace-loading-panel { backdrop-filter:blur(18px) saturate(140%);-webkit-backdrop-filter:blur(18px) saturate(140%); }
+@supports not ((backdrop-filter:blur(2px))) {
+ .landing-page .landing-nav,.landing-page .dashboard-preview,.landing-page .floating-note,.landing-page .benefit-card,.landing-page .landing-feature-card,.landing-page .landing-step.step-card,.auth-card,.app .card,.app .panel,.app .stat-card { background:rgba(255,255,255,.96); }
+}
+@media(prefers-reduced-transparency:reduce) {
+ .landing-page .landing-nav,.landing-page .dashboard-preview,.landing-page .floating-note,.landing-page .benefit-card,.landing-page .landing-feature-card,.landing-page .landing-step.step-card,.auth-card,.app .card,.app .panel,.app .stat-card { backdrop-filter:none;-webkit-backdrop-filter:none;background:rgba(255,255,255,.97); }
+}
