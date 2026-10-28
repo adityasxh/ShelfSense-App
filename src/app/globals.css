@@ -409,3 +409,85 @@ button,a { -webkit-tap-highlight-color:transparent; }
 .auth-nav .landing-brand .brand-mark {
   color: #fff;
 }
+
+
+/* ShelfSense workspace polish: smooth navigation, restrained glass surfaces, and useful interaction states. */
+html { scroll-behavior: smooth; scroll-padding-top: 24px; }
+.app {
+  --workspace-shadow: 0 12px 34px rgba(25, 55, 36, .055);
+  animation: workspace-enter .42s ease both;
+}
+.app .topbar {
+  position: relative;
+  isolation: isolate;
+}
+.app .nav button,
+.app button {
+  transition: background-color .18s ease, color .18s ease, border-color .18s ease, box-shadow .2s ease, transform .2s ease;
+}
+.app button:hover:not(:disabled) {
+  border-color: #5e8a70;
+  box-shadow: 0 5px 14px rgba(39, 103, 73, .09);
+  transform: translateY(-1px);
+}
+.app button:active:not(:disabled) { transform: translateY(0) scale(.985); }
+.app button:focus-visible,
+.app input:focus-visible,
+.app select:focus-visible,
+.app textarea:focus-visible {
+  outline: 3px solid rgba(91, 153, 111, .3);
+  outline-offset: 2px;
+}
+.app .nav { gap: 8px; }
+.app .nav button { border-radius: 8px; padding: 10px 14px; }
+.app .nav button.active { box-shadow: 0 5px 14px rgba(39, 103, 73, .15); }
+.app .panel,
+.app .metric,
+.app .scenario {
+  border: 1px solid rgba(190, 204, 188, .82);
+  border-radius: 12px;
+  box-shadow: var(--workspace-shadow);
+  transition: border-color .22s ease, box-shadow .22s ease, transform .22s ease, background-color .22s ease;
+}
+.app .panel { padding: 20px; background: rgba(255,255,255,.82); }
+.app .metric { padding: 17px; background: rgba(255,255,255,.86); }
+.app .metric:hover,
+.app .scenario:hover { transform: translateY(-3px); border-color: rgba(79, 139, 99, .65); box-shadow: 0 15px 34px rgba(25, 55, 36, .09); }
+.app .value { letter-spacing: -.035em; }
+.app .spread { margin-bottom: 12px; }
+.app .grid { gap: 12px; }
+.app .table-wrap { border: 1px solid #e2e8df; border-radius: 9px; overflow-x: auto; }
+.app table { border-collapse: separate; border-spacing: 0; }
+.app thead th { position: sticky; top: 0; z-index: 1; background: #f2f6ef; }
+.app tbody tr { transition: background-color .18s ease; }
+.app tbody tr:hover { background: #f7faf5; }
+.app td, .app th { padding: 12px 10px; }
+.app .field input, .app .field select { min-height: 42px; border-radius: 7px; transition: border-color .18s ease, box-shadow .18s ease; }
+.app .field input:focus, .app .field select:focus { border-color: #4b8762; box-shadow: 0 0 0 3px rgba(75,135,98,.12); outline: none; }
+.app .primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+.app .primary:hover:not(:disabled) { background: #1f573d; border-color: #1f573d; }
+.app .danger { color: #9b2d2d; border-color: #d7a4a0; background: #fffafa; }
+.app .danger:hover:not(:disabled) { background: #fff0ee; border-color: #bd7771; }
+.app .notice { border-radius: 9px; }
+.app .scenario.best { border-color: #70a17e; background: linear-gradient(145deg, rgba(239,249,240,.96), rgba(255,255,255,.95)); box-shadow: 0 10px 28px rgba(39,103,73,.09); }
+.app .footer { margin-top: 26px; padding-top: 18px; }
+.app .reveal-on-scroll { opacity: 0; transform: translateY(15px); filter: blur(3px); transition: opacity .55s ease, transform .55s cubic-bezier(.2,.7,.2,1), filter .55s ease; transition-delay: var(--reveal-delay, 0ms); }
+.app .reveal-on-scroll.is-revealed { opacity: 1; transform: translateY(0); filter: blur(0); }
+@keyframes workspace-enter { from { opacity: 0; } to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .app, .app *, .app *::before, .app *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
+  .app .reveal-on-scroll { opacity: 1; transform: none; filter: none; }
+}
+@media (max-width: 760px) {
+  .app { padding: 14px; }
+  .app .topbar { align-items: flex-start; }
+  .app .topbar > .small { order: 3; width: 100%; }
+  .app .nav { width: 100%; overflow-x: auto; flex-wrap: nowrap; padding-bottom: 5px; }
+  .app .nav button { flex: 0 0 auto; }
+  .app .panel { padding: 14px; }
+  .app .metric { padding: 14px; }
+  .app .spread { align-items: flex-start; }
+  .app .actions { gap: 7px; }
+  .app table { min-width: 760px; }
+}
