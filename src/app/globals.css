@@ -590,3 +590,41 @@ html { scroll-behavior: smooth; scroll-padding-top: 24px; }
  .app,.app *, .app *::before,.app *::after { animation-duration:.01ms!important; animation-iteration-count:1!important; transition-duration:.01ms!important; scroll-behavior:auto!important; }
  .app .reveal-on-scroll { opacity:1; transform:none; filter:none; }
 }
+
+
+/* Keyboard visibility and reduced-motion support across public and authenticated screens. */
+.landing-page a:focus-visible,
+.landing-page button:focus-visible,
+.legal-page a:focus-visible,
+.app a:focus-visible,
+.app button:focus-visible,
+.app input:focus-visible,
+.app select:focus-visible,
+.app textarea:focus-visible {
+  outline: 3px solid #367b52;
+  outline-offset: 3px;
+  border-radius: 5px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .landing-page *,
+  .landing-page *::before,
+  .landing-page *::after {
+    scroll-behavior: auto !important;
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+  .landing-page .reveal-on-scroll { opacity: 1; transform: none; filter: none; }
+}
+@media (max-width: 600px) {
+  .landing-page .landing-nav { padding: 18px 16px; gap: 12px; flex-wrap: wrap; }
+  .landing-page .landing-nav-links { gap: 12px; flex-wrap: wrap; justify-content: flex-end; font-size: .82rem; }
+  .landing-page .landing-hero { padding: 34px 16px 20px; grid-template-columns: minmax(0,1fr); }
+  .landing-page .landing-hero h1 { font-size: clamp(2.8rem, 13vw, 4rem); }
+  .landing-page .landing-visual { padding: 20px 0 30px; }
+  .landing-page .dashboard-preview { padding: 14px; transform: none; }
+  .landing-page .landing-button-primary,
+  .landing-page .landing-button-secondary,
+  .landing-page .landing-button-light { max-width: 100%; gap: 10px; }
+  .landing-page .landing-footer { padding-left: 16px; padding-right: 16px; }
+}

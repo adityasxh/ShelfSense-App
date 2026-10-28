@@ -10,6 +10,7 @@ describe("inventory risk",()=>{
  it("flags products past expiry separately",()=>{const a=assessProduct({...base,expiryDate:"2026-10-27"},TODAY);expect(a.risk).toBe("Expired");expect(a.leftoverUnits).toBe(10);});
  it("expects enough stock to sell when daily sales exceed stock",()=>{const a=assessProduct({...base,quantity:3,dailySales:8},TODAY);expect(a.expectedSales).toBe(3);expect(a.leftoverUnits).toBe(0);});
  it("handles zero daily sales",()=>{const a=assessProduct({...base,dailySales:0},TODAY);expect(a.expectedSales).toBe(0);expect(a.leftoverUnits).toBe(10);});
+ it("handles zero stock with nonzero sales estimate",()=>{const a=assessProduct({...base,quantity:0,dailySales:5},TODAY);expect(a.expectedSales).toBe(0);expect(a.leftoverUnits).toBe(0);});
  it("handles a zero-stock product",()=>{const a=assessProduct({...base,quantity:0},TODAY);expect(a.risk).toBe("Low");expect(a.leftoverUnits).toBe(0);expect(a.stockValue).toBe(0);});
  it("handles zero quantity metrics",()=>{const m=inventoryMetrics([]);expect(m.totalStockValue).toBe(0);expect(m.productCount).toBe(0);});
  it("rejects invalid calendar dates",()=>{expect(assessProduct({...base,expiryDate:"2026-02-30"},TODAY).eligibleDays).toBe(0);});
