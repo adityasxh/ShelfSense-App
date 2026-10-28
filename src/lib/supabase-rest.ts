@@ -2,7 +2,7 @@ const URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 const SESSION_KEY = "shelfsense.supabase.session.v1";
 
-export type CloudSession = { access_token: string; refresh_token: string; user: { id: string; email?: string } };
+export type CloudSession = { access_token: string; refresh_token: string; user: { id: string; email?: string; user_metadata?: Record<string, unknown>; phone?: string } };
 export const cloudConfigured = Boolean(URL && KEY);
 
 function config() {
@@ -34,9 +34,10 @@ async function request(path: string, init: RequestInit = {}, token?: string) {
   if (!response.ok) throw new Error(String(body?.msg ?? body?.message ?? body?.error_description ?? body?.error ?? `Supabase request failed (${response.status})`));
   return body;
 }
-export async function authenticate(email: string, password: string, mode: "signin" | "signup") {
+export type RegistrationDetails = { fullName: string; phone: string; shopName: string };
+export async function authenticate(email: string, password: string, mode: "signin" | "signup", details?: RegistrationDetails) {
   const session = await request(mode === "signup" ? "/auth/v1/signup" : "/auth/v1/token?grant_type=password", {
-    method: "POST", body: JSON.stringify({ email, password }),
+    method: "POST", body: JSON.stringify({ email, password, ...(mode === "signup" && details ? { data: { full_name: details.fullName, phone: details.phone, shop_name: details.shopName } } : {}) }),
   }) as CloudSession;
   if (!session.access_token || !session.user?.id) {
     if (mode === "signup") throw new Error("Account created. If email confirmation is enabled, confirm your email, then sign in.");
