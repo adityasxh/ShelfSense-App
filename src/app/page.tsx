@@ -16,6 +16,32 @@ export default function Home() {
     }
   }
 
+  useEffect(() => {
+    const root = document.querySelector(".landing-page");
+    if (!root) return;
+    const targets = root.querySelectorAll<HTMLElement>(
+      ":scope > section:not(.landing-hero), .landing-benefits .benefit-card, .landing-feature-card, .landing-step.step-card, .landing-closing-cta"
+    );
+    if (!("IntersectionObserver" in window)) {
+      targets.forEach((element) => element.classList.add("is-revealed"));
+      return;
+    }
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("is-revealed");
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: "0px 0px -36px 0px" });
+    targets.forEach((element, index) => {
+      element.classList.add("reveal-on-scroll");
+      element.style.setProperty("--reveal-delay", `${Math.min(index % 3, 2) * 75}ms`);
+      observer.observe(element);
+    });
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <main className="landing-page">
       <header className="landing-nav">
