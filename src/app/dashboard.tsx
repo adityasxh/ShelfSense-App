@@ -4,11 +4,10 @@ import type { Product, RiskLevel } from "@/types/inventory";
 import { assessInventory, assessProduct, inventoryMetrics } from "@/lib/calculations/inventory-risk";
 import { simulateStock, type ScenarioResult } from "@/lib/calculations/simulator";
 import { validateProduct } from "@/lib/validation";
-import { fallbackRecommendations, type Recommendation } from "@/lib/ai";
 import { dateOffsetISO } from "@/lib/date";
 import { clearInventory, deleteInventoryProduct, getOrCreateShop, loadInventory, restoreSession, saveInventoryProduct, signOut, type CloudSession } from "@/lib/supabase-rest";
 
-type Section="Dashboard"|"Inventory"|"Simulator"|"AI Insights";
+type Section="Dashboard"|"Inventory"|"Simulator";
 type FormState={name:string;category:string;quantity:string;unitCost:string;sellingPrice:string;expiryDate:string;dailySales:string;extraUnitCost:string};
 const newForm=():FormState=>({name:"",category:"",quantity:"0",unitCost:"0",sellingPrice:"0",expiryDate:dateOffsetISO(7),dailySales:"0",extraUnitCost:"0"});
 const money=(n:number)=>new Intl.NumberFormat("en-IN",{style:"currency",currency:"INR",maximumFractionDigits:2}).format(Number.isFinite(n)?n:0);
@@ -22,14 +21,12 @@ export default function Home(){
  const [notice,setNotice]=useState<{kind:"success"|"error"|"info";text:string}|null>(null),[search,setSearch]=useState(""),[riskFilter,setRiskFilter]=useState("All"),[sort,setSort]=useState("soonest");
  const [formOpen,setFormOpen]=useState(false),[editingId,setEditingId]=useState<string|null>(null),[form,setForm]=useState<FormState>(newForm()),[formErrors,setFormErrors]=useState<string[]>([]);
  const [selectedId,setSelectedId]=useState(""),[discount,setDiscount]=useState(15),[multiplier,setMultiplier]=useState(1.5),[bundleId,setBundleId]=useState(""),[bundlePrice,setBundlePrice]=useState("50"),[bundleQuantity,setBundleQuantity]=useState("3");
- const [aiBusy,setAiBusy]=useState(false),[aiMode,setAiMode]=useState<"none"|"gemini"|"fallback">("none"),[recommendations,setRecommendations]=useState<Recommendation[]>([]),[aiMessage,setAiMessage]=useState("");
  useEffect(()=>{let cancelled=false;const start=async()=>{try{const session=await restoreSession();if(!session){if(!cancelled)window.location.replace("/auth?next=%2Fdashboard");return;}const shop=await getOrCreateShop(session);const data=await loadInventory(session,shop);if(cancelled)return;setCloudSession(session);setShopId(shop);setProducts(data);setReady(true);}catch(error){if(!cancelled){const detail=error instanceof Error?error.message:"Could not connect to Supabase.";window.location.replace("/auth?next=%2Fdashboard&error="+encodeURIComponent(detail));}}};void start();return()=>{cancelled=true;};},[]);
  const assessments=useMemo(()=>assessInventory(products),[products]),metrics=useMemo(()=>inventoryMetrics(products),[products]);
  useEffect(()=>{if(!products.some(p=>p.id===selectedId))setSelectedId(products[0]?.id??"");},[products,selectedId]);
  useEffect(()=>{if(!products.some(p=>p.id===bundleId&&p.id!==selectedId))setBundleId(products.find(p=>p.id!==selectedId&&assessProduct(p).risk!=="Expired")?.id??"");},[products,bundleId,selectedId]);
  const selected=products.find(p=>p.id===selectedId),bundle=products.find(p=>p.id===bundleId)??null;
  const simulation=useMemo(()=>selected?simulateStock(selected,{discountPercent:discount,demandMultiplier:multiplier,bundleProduct:bundle,bundlePrice:Number(bundlePrice),bundleQuantity:Number(bundleQuantity)}):null,[selected,discount,multiplier,bundle,bundlePrice,bundleQuantity]);
- const scenarioMap=useMemo(()=>Object.fromEntries(products.map(p=>[p.id,simulateStock(p,{discountPercent:discount,demandMultiplier:multiplier}).scenarios])),[products,discount,multiplier]);
  const filtered=useMemo(()=>{let list=assessments.filter(a=>a.product.name.toLowerCase().includes(search.trim().toLowerCase()));if(riskFilter!=="All")list=list.filter(a=>a.risk===riskFilter);return [...list].sort((a,b)=>sort==="name"?a.product.name.localeCompare(b.product.name):sort==="latest"?b.daysToExpiry-a.daysToExpiry:a.daysToExpiry-b.daysToExpiry);},[assessments,search,riskFilter,sort]);
  function resetForm(){setFormOpen(false);setEditingId(null);setFormErrors([]);}
  function addProduct(){setEditingId(null);setForm(newForm());setFormErrors([]);setFormOpen(true);setSection("Inventory");}
@@ -38,8 +35,6 @@ export default function Home(){
  async function deleteProduct(p:Product){if(!cloudSession||!shopId){setNotice({kind:"error",text:"Sign in to Supabase before changing inventory."});setAuthOpen(true);return;}if(!confirm(`Delete “${p.name}” from inventory?`))return;try{await deleteInventoryProduct(cloudSession,shopId,p.id);setProducts(await loadInventory(cloudSession,shopId));setNotice({kind:"success",text:`Deleted ${p.name} from Supabase.`});}catch(error){setNotice({kind:"error",text:error instanceof Error?error.message:"Could not delete product."});}}
 
  async function clearAll(){if(!cloudSession||!shopId){setNotice({kind:"error",text:"Sign in to Supabase before changing inventory."});setAuthOpen(true);return;}if(!confirm("Clear every product from your Supabase shop? This cannot be undone."))return;try{await clearInventory(cloudSession,shopId);setProducts(await loadInventory(cloudSession,shopId));setNotice({kind:"success",text:"Supabase inventory cleared."});}catch(error){setNotice({kind:"error",text:error instanceof Error?error.message:"Could not clear inventory."});}}
- async function generateAI(){setAiBusy(true);setAiMessage("");try{const res=await fetch("/api/ai/recommend",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({products,discountPercent:discount,demandMultiplier:multiplier})});const json:unknown=await res.json();if(!res.ok)throw new Error(json&&typeof json==="object"&&"error"in json&&typeof json.error==="string"?json.error:`Request failed (${res.status})`);if(!json||typeof json!=="object"||!("recommendations"in json)||!Array.isArray(json.recommendations))throw new Error("Unexpected response format.");const payload=json as {recommendations:Recommendation[];mode?:string;error?:string};if(!payload.recommendations.every(r=>r&&typeof r.title==="string"&&typeof r.action==="string"&&typeof r.evidence==="string"&&typeof r.tradeoff==="string"&&typeof r.uncertainty==="string"&&typeof r.nextStep==="string"&&["Urgent","High","Medium","Low"].includes(r.priority)))throw new Error("Recommendation validation failed.");setRecommendations(payload.recommendations);setAiMode(payload.mode==="gemini"?"gemini":"fallback");if(payload.error)setAiMessage(payload.error);else if(payload.mode!=="gemini")setAiMessage("Gemini is not configured; server returned rule-based guidance, not AI-generated text.");}catch(error){setRecommendations(fallbackRecommendations(assessments,scenarioMap));setAiMode("fallback");setAiMessage(`${error instanceof Error?error.message:"AI unavailable"} Showing local rule-based guidance instead.`);}finally{setAiBusy(false);}}
-
  useEffect(()=>{
   if(!ready) return;
   const root=document.querySelector<HTMLElement>(".app");
@@ -62,7 +57,7 @@ export default function Home(){
    observer.observe(el);
   });
   return()=>observer.disconnect();
- },[section,ready,formOpen,recommendations.length,filtered.length]);
+ },[section,ready,formOpen,filtered.length]);
  if(!ready)return <main className="app workspace-loading" role="status" aria-live="polite" aria-label="Preparing your ShelfSense workspace">
   <div className="workspace-loading-top"><div className="workspace-loading-brand"><span className="loading-logo"><img src="/shelfsense-icon.svg" alt="" width="34" height="34" /></span><div><span className="skeleton skeleton-title" /><span className="skeleton skeleton-subtitle" /></div></div><span className="workspace-loading-caption"><span className="loading-pulse-dot" /> Preparing your workspace</span></div>
   <div className="workspace-loading-intro"><span className="skeleton skeleton-kicker" /><span className="skeleton skeleton-heading" /><span className="skeleton skeleton-description" /></div>
@@ -74,7 +69,7 @@ export default function Home(){
   <header className="topbar">
    <a className="workspace-brand" href="/" aria-label="ShelfSense home"><img src="/shelfsense-icon.svg" alt="" width="42" height="42"/><span><strong>ShelfSense</strong><small>Rescue Stock Before It Becomes Waste.</small></span></a>
    <div className="topbar-right"><div className="actions"><button className="profile-button" onClick={()=>setProfileOpen(true)}><WorkspaceIcon name="user-round"/> My profile</button><button className="logout-button" onClick={()=>{signOut();window.location.href="/";}}><WorkspaceIcon name="log-out"/> Log out</button></div>
-   <nav className="nav" aria-label="Main navigation">{([{name:"Dashboard",icon:"layout-dashboard"},{name:"Inventory",icon:"package"},{name:"Simulator",icon:"sliders-horizontal"},{name:"AI Insights",icon:"sparkles"}] as {name:Section;icon:string}[]).map(s=><button key={s.name} className={section===s.name?"active":""} onClick={()=>{setSection(s.name);setNotice(null);}}><WorkspaceIcon name={s.icon}/>{s.name}</button>)}</nav></div>
+   <nav className="nav" aria-label="Main navigation">{([{name:"Dashboard",icon:"layout-dashboard"},{name:"Inventory",icon:"package"},{name:"Simulator",icon:"sliders-horizontal"}] as {name:Section;icon:string}[]).map(s=><button key={s.name} className={section===s.name?"active":""} onClick={()=>{setSection(s.name);setNotice(null);}}><WorkspaceIcon name={s.icon}/>{s.name}</button>)}</nav></div>
   </header>
 
   
@@ -99,10 +94,6 @@ export default function Home(){
     <section className="panel"><h2>Bundle setup</h2><p className="small muted">One bundle contains one unit of the selected product and one unit of the second product.</p><div className="form-grid"><SelectField id="bundleProduct" label="Second product" value={bundleId} onChange={setBundleId} options={products.filter(p=>p.id!==selected.id).map(p=>({value:p.id,label:p.name+(assessProduct(p).risk==="Expired"?" (EXPIRED)":"")}))} emptyLabel="Select second product"/><Field id="bundlePrice" label="Bundle price (₹ total)" type="number" value={bundlePrice} onChange={setBundlePrice} min="0" step="0.01"/><Field id="bundleQuantity" label="Maximum bundle quantity" type="number" value={bundleQuantity} onChange={setBundleQuantity} min="0" step="1"/></div></section>
     <section className="panel"><h2>Financial assumptions</h2><ul><li>Contribution = revenue − purchase costs of units sold − additional variable costs of units sold. Purchase cost is counted once.</li><li>Revenue, contribution, purchase value and potential leftover purchase value are separate measures; overheads and taxes are excluded.</li><li>Eligible selling days include expiry date; a product past its expiry is not eligible for sales recommendations.</li><li>Demand multiplier is a user-controlled hypothetical assumption. Sales outcomes and actual profit may differ.</li></ul></section>
    </>}
-  </>}
-  {section==="AI Insights"&&<>
-   <div className="spread"><div><h1>AI Decision Explainer</h1><p className="muted">Recommendations grounded in inventory data and recomputed server-side estimates.</p></div><button className="primary" disabled={aiBusy||!products.length} onClick={generateAI}><WorkspaceIcon name={aiBusy?"loader-circle":"sparkles"}/>{aiBusy?"Generating…":recommendations.length?"Retry recommendations":"Generate recommendations"}</button></div><div className="notice">Optional Gemini setup: set <code>GEMINI_API_KEY</code> in <code>.env.local</code>. Without it, the server returns rule-based recommendations and labels them accordingly.</div>{aiMessage&&<div className="notice error" role="status">{aiMessage}</div>}
-   {!recommendations.length?<section className="panel"><Empty text="Click Generate recommendations. AI is not called automatically while editing inventory."/></section>:<><div className="notice">Mode: <strong>{aiMode==="gemini"?"Gemini AI":"Rule-based fallback (not AI-generated)"}</strong></div>{recommendations.map((r,i)=><section className="panel" key={`${r.title}-${i}`}><div className="spread"><h2>{i+1}. {r.title}</h2><span className={riskClass(r.priority)}>{r.priority} priority</span></div><p><strong>Evidence:</strong> {r.evidence}</p><p><strong>Suggested action:</strong> {r.action}</p><p><strong>Financial trade-off:</strong> {r.tradeoff}</p><p><strong>Uncertainty:</strong> {r.uncertainty}</p><p><strong>Next step:</strong> {r.nextStep}</p></section>)}</>}
   </>}
   <footer className="footer">ShelfSense prototype · Inventory stored in Supabase · Not a guaranteed demand forecast. Follow applicable food-safety requirements.</footer>
  </main>;
