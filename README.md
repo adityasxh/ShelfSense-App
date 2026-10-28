@@ -2,7 +2,7 @@
 
 **Rescue Stock Before It Becomes Waste.**
 
-ShelfSense is a functional prototype for independent grocery shops. It estimates expiry-driven stock risk, supports basic inventory management, compares simple rescue scenarios, and can explain results with Gemini when a server-side key is configured.
+ShelfSense is a functional prototype for independent grocery shops. It estimates expiry-driven stock risk, supports inventory management, and compares stock-rescue scenarios with transparent calculations.
 
 > Demo inventory is fictional. Estimates are based on user-entered average daily sales and are not a reliable forecast, guaranteed saving, or actual realized profit. Follow applicable food-safety rules; expired items must not be recommended for resale.
 
@@ -26,19 +26,7 @@ Open http://localhost:3000. The app works without environment variables and star
 - **Loss Radar:** dynamic inventory values, high/urgent counts, risk explanations, estimated leftovers and a priority queue.
 - **Inventory:** create, edit and delete products; search by name; filter risk; sort by expiry; reset fictional sample data; clear inventory; browser persistence.
 - **Stock Rescue Simulator:** compare keep-price and discount assumptions; optionally compare a two-product bundle; update results immediately; show revenue, variable costs, contribution, margin, leftover units/value and warnings.
-- **AI Decision Explainer:** click to request up to three recommendations. Uses a server-side Gemini route when configured and validated rule-based guidance otherwise.
 - **Calculation tests:** pure risk and scenario logic covered with Vitest.
-
-## Optional Gemini
-
-Add a real API key only to `.env.local`:
-
-```dotenv
-GEMINI_API_KEY=your_key_here
-GEMINI_MODEL=gemini-2.5-flash
-```
-
-Restart the dev server after setting environment variables. The key is server-only; never use `NEXT_PUBLIC_GEMINI_API_KEY` or commit `.env.local`. If no key is configured or the API fails, the endpoint returns clearly labelled rule-based recommendations. The model's output is structurally validated, and product risk/scenario figures are recomputed on the server.
 
 ## Commands
 
@@ -68,6 +56,5 @@ This version uses browser localStorage and displays that state in the header. A 
 
 - One local browser profile, no authentication or multi-shop support.
 - No real sales history, automated demand forecasting, barcode scanning, CSV export, or historical analytics.
-- The Gemini SDK route has a reasonable timeout; API availability and model access depend on the user's key/project.
 - Inventory date calculations use the browser's local calendar date.
 - This prototype has not been validated with real retailers.
