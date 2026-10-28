@@ -63,13 +63,26 @@ export async function POST(request: Request) {
     ]);
     const output = ResponseSchema.safeParse(JSON.parse(response.response.text()) as unknown);
     if (!output.success) throw new Error("Model response did not match the required structure.");
-    const expiredNames = assessments.filter(a => a.risk === "Expired").map(a => a.product.name.toLowerCase());
-    const recommendations = output.data.recommendations.map(r => ({
-      ...r,
-      action: expiredNames.some(name => r.title.toLowerCase().includes(name))
-        ? "Do not resell this expired product. Follow applicable handling and disposal requirements."
-        : r.action,
-    }));
+    const expiredProducts = assessments
+      .filter(a => a.risk === "Expired")
+      .map(a => a.product.name.trim())
+      .filter(Boolean);
+    // Enforce the expiry safety rule after generation. A model may ignore prompt
+    // instructions or mention an expired product in a field other than its title.
+    const recommendations = output.data.recommendations.map(r => {
+      const mentionsExpiredProduct = expiredProducts.some(name =>
+        [r.title, r.evidence, r.action, r.tradeoff, r.uncertainty, r.nextStep]
+          .some(value => value.toLocaleLowerCase().includes(name.toLocaleLowerCase()))
+      );
+      return mentionsExpiredProduct
+        ? {
+            ...r,
+            action: "Do not resell or discount expired stock. Follow applicable food-safety handling and disposal requirements.",
+            tradeoff: "Expired stock must not be resold. Any purchase value shown is an inventory estimate, not a measured actual loss.",
+            nextStep: "Verify the item and follow applicable local food-safety and disposal requirements.",
+          }
+        : r;
+    });
     return NextResponse.json({ mode: "gemini", recommendations });
   } catch {
     return NextResponse.json({ mode: "fallback", recommendations: fallback, error: "Gemini is unavailable or returned an invalid response; rule-based recommendations were used." });
