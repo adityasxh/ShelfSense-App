@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { restoreSession } from "@/lib/supabase-rest";
 
 export default function Home() {
@@ -20,7 +20,7 @@ export default function Home() {
     <main className="landing-page">
       <header className="landing-nav">
         <a className="landing-brand" href="#" aria-label="ShelfSense home">
-          <img className="brand-icon" src="/shelfsense-icon.svg" alt="" />
+          <img className="brand-icon" src="/shelfsense-icon.svg" alt="" width="38" height="38" decoding="async" />
           <span>ShelfSense</span>
         </a>
         <nav className="landing-nav-links" aria-label="Main navigation">
@@ -48,7 +48,7 @@ export default function Home() {
         <div className="landing-visual" aria-label="Illustrative preview of the ShelfSense inventory dashboard">
           <div className="visual-orbit orbit-one" /><div className="visual-orbit orbit-two" />
           <div className="dashboard-preview">
-            <div className="preview-top"><div className="preview-logo"><img className="brand-icon preview-brand-icon" src="/shelfsense-icon.svg" alt="" /><b>ShelfSense</b></div><span className="preview-status"><span /> Sample view</span></div>
+            <div className="preview-top"><div className="preview-logo"><img className="brand-icon preview-brand-icon" src="/shelfsense-icon.svg" alt="" width="29" height="29" decoding="async" /><b>ShelfSense</b></div><span className="preview-status"><span /> Sample view</span></div>
             <div className="preview-heading"><div><span className="preview-label">INVENTORY OVERVIEW</span><h3>Your stock, at a glance.</h3><p>Know what needs your attention.</p></div><div className="preview-calendar"><svg className="lucide-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 11h18"/></svg> <span>Today</span></div></div>
             <div className="preview-metrics">
               <div><span>Inventory value</span><strong>₹24,850</strong><small>Illustrative sample</small></div>
@@ -60,7 +60,7 @@ export default function Home() {
             <div className="preview-product"><span className="product-icon bakery"><svg className="lucide-icon" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m12 3 9 5-9 5-9-5 9-5Z"/><path d="M3 8v8l9 5 9-5V8"/><path d="M12 13v8"/><path d="m7.5 5.5 9 5"/></svg></span><div className="product-info"><b>Whole wheat bread</b><small>Bakery · 5 days to expiry</small></div><span className="risk-pill medium">Review</span><span className="product-arrow">↗</span></div>
             <div className="preview-bottom"><span className="preview-check"><svg className="lucide-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg></span><span>Spot risk early. Choose your next step.</span></div>
           </div>
-          <div className="cashier-art-wrap" aria-hidden="true"><span className="cashier-glow" /><img className="cashier-illustration" src="/cashier-cutout.webp" alt="" /></div>
+          <div className="cashier-art-wrap" aria-hidden="true"><span className="cashier-glow" /><img className="cashier-illustration" src="/cashier-cutout.webp" alt="" loading="eager" fetchPriority="high" decoding="async" width="512" height="512" /></div>
           <div className="floating-note note-top"><span className="float-icon"><svg className="lucide-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m12 3 1.9 5.8L20 11l-6.1 2.2L12 19l-1.9-5.8L4 11l6.1-2.2L12 3Z"/><path d="m19 14 1.1 2.9L23 18l-2.9 1.1L19 22l-1.1-2.9L15 18l2.9-1.1L19 14Z"/></svg></span><div><b>Know what’s at risk</b><small>Priorities at a glance</small></div></div>
           <div className="floating-note note-bottom"><span className="float-icon leaf-icon"><svg className="lucide-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M3 3v18h18"/><path d="M8 15v-4"/><path d="M13 15V6"/><path d="M18 15V9"/></svg></span><div><b>Compare rescue options</b><small>Before changing a price</small></div></div>
           <span className="hero-spark spark-one"><svg className="lucide-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m12 3 1.9 5.8L20 11l-6.1 2.2L12 19l-1.9-5.8L4 11l6.1-2.2L12 3Z"/><path d="m19 14 1.1 2.9L23 18l-2.9 1.1L19 22l-1.1-2.9L15 18l2.9-1.1L19 14Z"/></svg></span><span className="hero-spark spark-two"><svg className="lucide-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m12 3 1.9 5.8L20 11l-6.1 2.2L12 19l-1.9-5.8L4 11l6.1-2.2L12 3Z"/><path d="m19 14 1.1 2.9L23 18l-2.9 1.1L19 22l-1.1-2.9L15 18l2.9-1.1L19 14Z"/></svg></span>
