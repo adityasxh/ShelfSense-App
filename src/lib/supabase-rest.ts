@@ -69,12 +69,20 @@ export async function rest<T>(table: string, query: string, method: string, toke
   }, token) as Promise<T>;
 }
 export async function getOrCreateShop(session: CloudSession) {
-  const shops = await rest<Array<{id:string}>>("shops", "?select=id&order=created_at.asc&limit=1", "GET", session.access_token);
+  // Derive the owner ID from Supabase Auth using the same access token used for database requests.
+  // This avoids relying on a stale or mismatched user object cached in localStorage.
+  const authUser = await request("/auth/v1/user", { method: "GET" }, session.access_token) as { id?: string; email?: string };
+  if (!authUser.id) throw new Error("Supabase did not confirm the signed-in user. Sign out and sign in again.");
+  if (session.user.id !== authUser.id) {
+    session.user = { ...session.user, id: authUser.id, email: authUser.email ?? session.user.email };
+    saveSession(session);
+  }
+  const shops = await rest<Array<{id:string}>>("shops", "?select=id&owner_id=eq." + authUser.id + "&order=created_at.asc&limit=1", "GET", session.access_token);
   if (shops[0]) return shops[0].id;
   const created = await rest<Array<{id:string}>>("shops", "", "POST", session.access_token, {
-    owner_id: session.user.id, name: "My Grocery Shop", currency_code: "INR", timezone: "Asia/Kolkata",
+    owner_id: authUser.id, name: "My Grocery Shop", currency_code: "INR", timezone: "Asia/Kolkata",
   });
-  if (!created[0]?.id) throw new Error("Shop could not be created. Please retry.");
+  if (!created[0]?.id) throw new Error("Shop could not be created. Check the shops INSERT policy: owner_id must equal auth.uid() for the signed-in user.");
   return created[0].id;
 }
 type DbProduct = {id:string;name:string;category_name:string;cost_price:number;selling_price:number;daily_sales_estimate:number;extra_unit_cost:number};
