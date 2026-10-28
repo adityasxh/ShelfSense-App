@@ -349,3 +349,50 @@ button,a { -webkit-tap-highlight-color:transparent; }
 @media(prefers-reduced-transparency:reduce) {
  .landing-page .landing-nav,.landing-page .dashboard-preview,.landing-page .floating-note,.landing-page .benefit-card,.landing-page .landing-feature-card,.landing-page .landing-step.step-card,.auth-card,.app .card,.app .panel,.app .stat-card { backdrop-filter:none;-webkit-backdrop-filter:none;background:rgba(255,255,255,.97); }
 }
+
+
+/* Minimal icon pass: retain the brand mark, remove decorative icon clutter */
+.landing-page .landing-proof-icons,
+.landing-page .hero-spark,
+.landing-page .floating-note,
+.landing-page .benefit-icon,
+.landing-page .benefit-link .lucide-icon,
+.landing-page .feature-icon,
+.landing-page .step-kicker .lucide-icon,
+.landing-page .step-more .lucide-icon,
+.landing-page .product-arrow,
+.landing-page .preview-calendar .lucide-icon,
+.landing-page .preview-product .product-icon,
+.landing-page .preview-check,
+.landing-page .insight-header>.lucide-icon,
+.landing-page .insight-note>.lucide-icon {
+  display:none !important;
+}
+.landing-page .landing-actions .landing-button-primary>span,
+.landing-page .landing-actions .landing-button-secondary>span,
+.landing-page .how-copy .landing-button-primary>span,
+.landing-page .nav-cta>span {
+  display:none !important;
+}
+.landing-page .landing-proof { gap:0; }
+.landing-page .landing-proof p { margin-left:0; }
+.landing-page .preview-product { grid-template-columns:minmax(0,1fr) auto; }
+.landing-page .product-info { padding-left:0; }
+.landing-page .benefit-card,.landing-page .landing-feature-card,.landing-page .landing-step.step-card { text-align:left; }
+.landing-page .benefit-card { padding-top:24px; }
+.landing-page .benefit-index,.landing-page .feature-number,.landing-page .step-kicker { margin-top:0; }
+.landing-page .feature-art { margin-top:24px; }
+.landing-page .insight-header { gap:8px; }
+.landing-page .step-more { gap:0; }
+.landing-page .nav-cta { gap:0; }
+.landing-page .landing-footer .landing-brand .brand-icon,
+.landing-page .landing-brand .brand-icon,
+.landing-page .preview-logo .brand-icon,
+.landing-page .radar-center img {
+  display:block !important;
+}
+@media(max-width:600px) {
+  .landing-page .landing-proof-icons,.landing-page .hero-spark,.landing-page .floating-note { display:none !important; }
+}
+/* Keep functional status indicators and brand assets; suppress ornamental icons in the app shell */
+.app .decorative-icon,.app .floating-icon,.app .sparkle-icon,.app .ornament-icon { display:none !important; }
