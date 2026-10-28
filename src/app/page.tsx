@@ -1,12 +1,20 @@
 "use client";
 
 import { useState } from "react";
-import Dashboard from "./dashboard";
+import { restoreSession } from "@/lib/supabase-rest";
 
 export default function Home() {
-  const [showDashboard, setShowDashboard] = useState(false);
-
-  if (showDashboard) return <Dashboard />;
+  const [opening, setOpening] = useState(false);
+  async function openShelfSense() {
+    if (opening) return;
+    setOpening(true);
+    try {
+      const session = await restoreSession();
+      window.location.href = session ? "/dashboard" : "/auth?next=%2Fdashboard";
+    } catch {
+      window.location.href = "/auth?next=%2Fdashboard";
+    }
+  }
 
   return (
     <main className="landing-page">
@@ -18,7 +26,7 @@ export default function Home() {
         <nav className="landing-nav-links" aria-label="Main navigation">
           <a href="#how-it-works">How it works</a>
           <a href="#features">Features</a>
-          <button className="nav-cta" onClick={() => setShowDashboard(true)}>Open dashboard <span aria-hidden="true">↗</span></button>
+          <button className="nav-cta" onClick={openShelfSense} disabled={opening}>{opening ? "Checking session…" : "Sign in"} <span aria-hidden="true">↗</span></button>
         </nav>
       </header>
 
@@ -28,7 +36,7 @@ export default function Home() {
           <h1>Rescue stock.<br /><em>Reduce waste.</em></h1>
           <p className="landing-lede">ShelfSense helps grocery shops spot products at risk of expiry, explore practical stock-rescue options, and make clearer decisions before good stock goes to waste.</p>
           <div className="landing-actions">
-            <button className="landing-button-primary" onClick={() => setShowDashboard(true)}>Explore ShelfSense <span aria-hidden="true">→</span></button>
+            <button className="landing-button-primary" onClick={openShelfSense}>Explore ShelfSense <span aria-hidden="true">→</span></button>
             <a className="landing-button-secondary" href="#how-it-works">See how it works <span aria-hidden="true">↓</span></a>
           </div>
           <div className="landing-proof">
@@ -76,7 +84,7 @@ export default function Home() {
       </section>
 
       <section className="landing-how" id="how-it-works">
-        <div className="how-copy"><div className="landing-section-kicker">A SIMPLE, PRACTICAL FLOW</div><h2>From “what might go off?”<br /><em>to “what can I do?”</em></h2><p>No complicated forecasting setup. Start with your stock list, make assumptions explicit, and use the results to guide your next review.</p><button className="landing-button-primary" onClick={() => setShowDashboard(true)}>Open the demo <span aria-hidden="true">→</span></button></div>
+        <div className="how-copy"><div className="landing-section-kicker">A SIMPLE, PRACTICAL FLOW</div><h2>From “what might go off?”<br /><em>to “what can I do?”</em></h2><p>No complicated forecasting setup. Start with your stock list, make assumptions explicit, and use the results to guide your next review.</p><button className="landing-button-primary" onClick={openShelfSense}>Explore ShelfSense <span aria-hidden="true">→</span></button></div>
         <div className="landing-steps">
           <div className="landing-step"><span className="step-count">1</span><div><h3>Add your inventory</h3><p>Enter product quantity, purchase cost, selling price, expiry date, and estimated daily sales.</p></div><span className="step-symbol">＋</span></div>
           <div className="landing-step"><span className="step-count">2</span><div><h3>Review your priority queue</h3><p>See transparent risk labels and estimated leftovers based on the inputs you provide.</p></div><span className="step-symbol">◎</span></div>
@@ -84,9 +92,9 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="landing-closing-cta"><div className="cta-decoration cta-one" /><div className="cta-decoration cta-two" /><span className="cta-kicker">MAKE THE NEXT STOCK DECISION COUNT</span><h2>Less waste starts with<br /><em>better visibility.</em></h2><p>Explore ShelfSense using sample inventory, then tailor it to your own shop.</p><button className="landing-button-light" onClick={() => setShowDashboard(true)}>Enter ShelfSense <span aria-hidden="true">→</span></button><span className="cta-footnote">No external account needed for the local demo.</span></section>
+      <section className="landing-closing-cta"><div className="cta-decoration cta-one" /><div className="cta-decoration cta-two" /><span className="cta-kicker">MAKE THE NEXT STOCK DECISION COUNT</span><h2>Less waste starts with<br /><em>better visibility.</em></h2><p>Sign in to access your private inventory dashboard and stock-rescue tools.</p><button className="landing-button-light" onClick={() => setShowDashboard(true)}>Explore ShelfSense <span aria-hidden="true">→</span></button><span className="cta-footnote">Sign in or register to continue.</span></section>
 
-      <footer className="landing-footer"><a className="landing-brand" href="#"><span className="brand-mark">S</span><span>ShelfSense</span></a><p>Rescue Stock Before It Becomes Waste.</p><div><a href="#features">Features</a><a href="#how-it-works">How it works</a><button onClick={() => setShowDashboard(true)}>Open dashboard ↗</button></div><small>Prototype · Estimates are illustrative, not guaranteed results. Follow applicable food-safety rules; expired products must not be resold.</small></footer>
+      <footer className="landing-footer"><a className="landing-brand" href="#"><span className="brand-mark">S</span><span>ShelfSense</span></a><p>Rescue Stock Before It Becomes Waste.</p><div><a href="#features">Features</a><a href="#how-it-works">How it works</a><button onClick={() => setShowDashboard(true)}>Sign in ↗</button></div><small>Prototype · Estimates are illustrative, not guaranteed results. Follow applicable food-safety rules; expired products must not be resold.</small></footer>
     </main>
   );
 }
