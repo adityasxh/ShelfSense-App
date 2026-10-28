@@ -396,3 +396,16 @@ button,a { -webkit-tap-highlight-color:transparent; }
 }
 /* Keep functional status indicators and brand assets; suppress ornamental icons in the app shell */
 .app .decorative-icon,.app .floating-icon,.app .sparkle-icon,.app .ornament-icon { display:none !important; }
+
+
+/* Keep the auth-page wordmark consistent with ShelfSense's neutral brand styling. */
+.auth-nav .landing-brand,
+.auth-nav .landing-brand:visited,
+.auth-nav .landing-brand:hover,
+.auth-nav .landing-brand:active {
+  color: var(--landing-ink, #183128);
+  text-decoration: none;
+}
+.auth-nav .landing-brand .brand-mark {
+  color: #fff;
+}
