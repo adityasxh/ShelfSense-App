@@ -17,7 +17,7 @@ const riskClass=(risk:RiskLevel)=>`badge risk-${risk}`;
 const toForm=(p:Product):FormState=>({name:p.name,category:p.category,quantity:String(p.quantity),unitCost:String(p.unitCost),sellingPrice:String(p.sellingPrice),expiryDate:p.expiryDate,dailySales:String(p.dailySales),extraUnitCost:String(p.extraUnitCost)});
 
 export default function Home(){
- const [section,setSection]=useState<Section>("Dashboard"),[products,setProducts]=useState<Product[]>([]),[ready,setReady]=useState(false),[storageMessage,setStorageMessage]=useState("Connecting to Supabase…");
+ const [section,setSection]=useState<Section>("Dashboard"),[products,setProducts]=useState<Product[]>([]),[ready,setReady]=useState(false),[storageMessage,setStorageMessage]=useState("Cloud inventory ready");
  const [cloudSession,setCloudSession]=useState<CloudSession|null>(null),[shopId,setShopId]=useState<string|null>(null),[profileOpen,setProfileOpen]=useState(false);
  const [notice,setNotice]=useState<{kind:"success"|"error"|"info";text:string}|null>(null),[search,setSearch]=useState(""),[riskFilter,setRiskFilter]=useState("All"),[sort,setSort]=useState("soonest");
  const [formOpen,setFormOpen]=useState(false),[editingId,setEditingId]=useState<string|null>(null),[form,setForm]=useState<FormState>(newForm()),[formErrors,setFormErrors]=useState<string[]>([]);
