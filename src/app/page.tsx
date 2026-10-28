@@ -94,7 +94,7 @@ export default function Home() {
 
       <section className="landing-closing-cta"><div className="cta-decoration cta-one" /><div className="cta-decoration cta-two" /><span className="cta-kicker">MAKE THE NEXT STOCK DECISION COUNT</span><h2>Less waste starts with<br /><em>better visibility.</em></h2><p>Sign in to access your private inventory dashboard and stock-rescue tools.</p><button className="landing-button-light" onClick={openShelfSense}>Explore ShelfSense <span aria-hidden="true">→</span></button><span className="cta-footnote">Sign in or register to continue.</span></section>
 
-      <footer className="landing-footer"><a className="landing-brand" href="#"><span className="brand-mark">S</span><span>ShelfSense</span></a><p>Rescue Stock Before It Becomes Waste.</p><div><a href="#features">Features</a><a href="#how-it-works">How it works</a><button onClick={() => setShowDashboard(true)}>Sign in ↗</button></div><small>Prototype · Estimates are illustrative, not guaranteed results. Follow applicable food-safety rules; expired products must not be resold.</small></footer>
+      <footer className="landing-footer"><a className="landing-brand" href="#"><span className="brand-mark">S</span><span>ShelfSense</span></a><p>Rescue Stock Before It Becomes Waste.</p><div><a href="#features">Features</a><a href="#how-it-works">How it works</a><button onClick={openShelfSense}>Sign in ↗</button></div><small>Prototype · Estimates are illustrative, not guaranteed results. Follow applicable food-safety rules; expired products must not be resold.</small></footer>
     </main>
   );
 }
