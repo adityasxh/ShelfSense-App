@@ -6,7 +6,7 @@ import { simulateStock, type ScenarioResult } from "@/lib/calculations/simulator
 import { validateProduct } from "@/lib/validation";
 import { fallbackRecommendations, type Recommendation } from "@/lib/ai";
 import { dateOffsetISO } from "@/lib/date";
-import { authenticate, clearInventory, cloudConfigured, deleteInventoryProduct, getOrCreateShop, loadInventory, restoreSession, saveInventoryProduct, signOut, type CloudSession } from "@/lib/supabase-rest";
+import { clearInventory, deleteInventoryProduct, getOrCreateShop, loadInventory, restoreSession, saveInventoryProduct, signOut, type CloudSession } from "@/lib/supabase-rest";
 
 type Section="Dashboard"|"Inventory"|"Simulator"|"AI Insights";
 type FormState={name:string;category:string;quantity:string;unitCost:string;sellingPrice:string;expiryDate:string;dailySales:string;extraUnitCost:string};
@@ -18,7 +18,7 @@ const toForm=(p:Product):FormState=>({name:p.name,category:p.category,quantity:S
 
 export default function Home(){
  const [section,setSection]=useState<Section>("Dashboard"),[products,setProducts]=useState<Product[]>([]),[ready,setReady]=useState(false),[storageMessage,setStorageMessage]=useState("Connecting to Supabase…");
- const [cloudSession,setCloudSession]=useState<CloudSession|null>(null),[shopId,setShopId]=useState<string|null>(null),[authOpen,setAuthOpen]=useState(false),[profileOpen,setProfileOpen]=useState(false),[authEmail,setAuthEmail]=useState(""),[authPassword,setAuthPassword]=useState(""),[authMode,setAuthMode]=useState<"signin"|"signup">("signin"),[cloudBusy,setCloudBusy]=useState(false);
+ const [cloudSession,setCloudSession]=useState<CloudSession|null>(null),[shopId,setShopId]=useState<string|null>(null),[profileOpen,setProfileOpen]=useState(false);
  const [notice,setNotice]=useState<{kind:"success"|"error"|"info";text:string}|null>(null),[search,setSearch]=useState(""),[riskFilter,setRiskFilter]=useState("All"),[sort,setSort]=useState("soonest");
  const [formOpen,setFormOpen]=useState(false),[editingId,setEditingId]=useState<string|null>(null),[form,setForm]=useState<FormState>(newForm()),[formErrors,setFormErrors]=useState<string[]>([]);
  const [selectedId,setSelectedId]=useState(""),[discount,setDiscount]=useState(15),[multiplier,setMultiplier]=useState(1.5),[bundleId,setBundleId]=useState(""),[bundlePrice,setBundlePrice]=useState("50"),[bundleQuantity,setBundleQuantity]=useState("3");
